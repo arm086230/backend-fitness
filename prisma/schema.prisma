@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// สร้างตาราง Users สำหรับเก็บข้อมูลผู้ใช้
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String
+  username String
+  email    String    @unique
+  password String
+  role     Role      @default(USER)
+  bookings Booking[]
+  Workout  Workout[]
+  Trainer  Trainer[]
+}
+
+
+model Workout {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  img         String
+  advice      String
+  workoutType String
+  WorkoutDate DateTime
+}
+
+enum TrainerStatus {
+  free
+  unavailable
+}
+
+model Trainer {
+  id       Int           @id @default(autoincrement())
+  user     User          @relation(fields: [userId], references: [id])
+  userId   Int
+  name     String
+  age      String
+  img      String
+  phone    String
+  stasus   TrainerStatus
+  bookings Booking[]
+}
+
+enum Status {
+  Pending
+  Confirmed
+}
+
+model Booking {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])  
+  TrainertId      Int
+  Trainer         Trainer  @relation(fields: [TrainertId], references: [id])
+  bookingDateTime DateTime
+  status          Status
+}
