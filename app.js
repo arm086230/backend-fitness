@@ -8,7 +8,7 @@ const bookingRouters = require("./routes/booking-route")
 const bodyParse = require('body-parser')
 const notFound = require('./middlewares/notFound')
 const errorMiddleware = require("./middlewares/error")
-const authenticate = require('./middlewares/authenticate')
+// const authenticate = require('./middlewares/authenticate')
 
 const app = express()
 app.use(morgan('dev'))

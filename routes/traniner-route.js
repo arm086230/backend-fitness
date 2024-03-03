@@ -6,6 +6,7 @@ const trainer = require('../controllers/traniner-controller')
 
 router.post('/createtraniner',authenticate,trainer.createtraniner);
 router.get('/gettrainer', authenticate, trainer.gettrainer);
+router.delete('/deletetrainer/:id', authenticate, trainer.deletetainer);
 
 
 module.exports = router;

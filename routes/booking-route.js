@@ -8,5 +8,6 @@ router.post('/createbooking',authenticate, booking.createbooking);
 router.get('/getbooking', authenticate, booking.getbooking);
 router.delete('/delete/:delebooks', authenticate, booking.deletebooking);
 router.get('/admin', authenticate, admin.getadminbooking);
+router.patch('/updatebooking/:id' , authenticate, booking.updatebooking);
 
 module.exports = router;

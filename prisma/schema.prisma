@@ -52,7 +52,7 @@ model Trainer {
   age      String
   img      String
   phone    String
-  stasus   TrainerStatus
+  status   TrainerStatus
   bookings Booking[]
 }
 

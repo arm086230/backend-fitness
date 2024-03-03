@@ -9,7 +9,7 @@ exports.workout = async (req, res, next) => {
     const workout = await db.workout.create({
         data:{
             workoutType,
-            WorkoutDate,
+            WorkoutDate: new Date(WorkoutDate),
             img,
             advice,
             userId
@@ -33,20 +33,19 @@ exports.workout = async (req, res, next) => {
   }
 
 
-  exports.updateworkout = async (req, res, next) => {
-    // validate req.params + req.body
+  exports.deleteworkout = async (req, res, next) => {
     const {id} = req.params
-    const data = req.body
-    try {
-      const rs = await db.todo.update({
-        data :  {...data},
-        where: { id : +id , userId : req.user.id} 
-      })
-      res.json({msg: 'Update ok', result: rs})
+    try{
+        const rs = await db.workout.delete({
+            where:{ id : +id }
+        })
+        res.json({message: 'delete',result:rs})
     }catch(err){
-      next(err)
+        next(err)
     }
-  }
+}
+
+
 
   exports.getAllStatus = async (req, res, next) => {
     res.json({status: Object.values(Status)})

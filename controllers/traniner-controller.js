@@ -3,7 +3,7 @@ const {Status} = require ('@prisma/client')
 
 exports.createtraniner = async (req, res, next) => {
     try{
-        const {name , age , img , phone , stasus} = req.body;
+        const {name , age , img , phone , status} = req.body;
         // console.log(req.body);
         const userId = req.user.id;
         const traniner = await db.trainer.create({
@@ -12,7 +12,7 @@ exports.createtraniner = async (req, res, next) => {
                 age,
                 img,
                 phone,
-                stasus,
+                status,
                 userId
             }
         })
@@ -32,6 +32,19 @@ exports.gettrainer = async (req , res , next) => {
         next(err)
     }
 }
+
+exports.deletetainer = async (req, res , next) =>{
+    const {id} = req.params
+  
+    try{
+        const rs = await db.trainer.delete({
+            where:{ id : +id }
+        })
+        res.json({message: 'delete',result:rs})
+    }catch(err){
+        next(err)
+    }
+  }
 
 
 exports.getAllStatus = async (req, res, next) => {
