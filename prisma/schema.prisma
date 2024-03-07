@@ -28,11 +28,10 @@ model User {
   Trainer  Trainer[]
 }
 
-
 model Workout {
   id          Int      @id @default(autoincrement())
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id],  onDelete: Cascade, onUpdate: Cascade)
   img         String
   advice      String
   workoutType String
@@ -46,7 +45,7 @@ enum TrainerStatus {
 
 model Trainer {
   id       Int           @id @default(autoincrement())
-  user     User          @relation(fields: [userId], references: [id])
+  user     User          @relation(fields: [userId], references: [id],  onDelete: Cascade, onUpdate: Cascade)
   userId   Int
   name     String
   age      String
@@ -64,9 +63,9 @@ enum Status {
 model Booking {
   id              Int      @id @default(autoincrement())
   userId          Int
-  user            User     @relation(fields: [userId], references: [id])  
+  user            User     @relation(fields: [userId], references: [id],  onDelete: Cascade, onUpdate: Cascade)
   TrainertId      Int
-  Trainer         Trainer  @relation(fields: [TrainertId], references: [id])
+  Trainer         Trainer  @relation(fields: [TrainertId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   bookingDateTime DateTime
   status          Status
 }
