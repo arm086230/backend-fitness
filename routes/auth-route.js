@@ -14,7 +14,7 @@ router.get('/all-status', authenticate, workController.getAllStatus)
 router.delete('/del/:id',authenticate,workController.deleteworkout);
 router.get('/getuser' , authenticate,adminuser.getadminuser)
 router.delete('/deluser/:id', authenticate,adminuser.deleteuser)
-// router.patch('/updateuser:/id',authenticate,adminuser.updateuser)
+router.patch('/updateuser/:id',authenticate,adminuser.updateuser)
 
 
 module.exports = router;

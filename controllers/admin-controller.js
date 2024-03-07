@@ -55,21 +55,21 @@ exports.workout = async (req, res, next) => {
     }
   }
 
-//   exports.updateuser = async (req , res , next) =>{
-//     const {id} = req.params;
-//     const {role} = req.body;
-//     try{
-//         const rs = await db.user.update({
-//             where:{ id : +id },
-//             data:{
-//                 role,
-//             }
-//         })
-//         res.json({message : "Updated ok", result : rs})
-//     }catch(err){
-//         next(err)
-//     }
-//   }
+  exports.updateuser = async (req , res , next) =>{
+    const {id} = req.params;
+    const {role} = req.body;
+    try{
+        const rs = await db.user.update({
+            where:{ id : +id },
+            data:{
+                role,
+            }
+        })
+        res.json({message : "Updated ok", result : rs})
+    }catch(err){
+        next(err)
+    }
+  }
 
 
 
