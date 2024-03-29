@@ -17,13 +17,23 @@ exports.deletebooking = async (req, res, next) => {
 };
 exports.createbooking = async (req, res, next) => {
   try {
-    const { TrainertId, bookingDateTime, status } = req.body;
+    const { TrainerId, bookingDateTime, status } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
+
+    console.log(TrainerId)
     const booking = await db.booking.create({
       data: {
-        userId: req.user.id,
-        TrainertId,
+        user: {
+          connect: {
+            id: req.user.id,
+          },
+        },
+        Trainer: {
+          connect: {
+            id: TrainerId,
+          },
+        },
         bookingDateTime: new Date(bookingDateTime),
         status,
       },
@@ -45,7 +55,6 @@ exports.getbooking = async (req, res, next) => {
   }
 };
 exports.updatebooking = async (req, res, next) => {
-  // validate req.params + req.body
   const { id } = req.params;
   const { status } = req.body;
 
