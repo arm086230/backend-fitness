@@ -2,24 +2,29 @@ const db = require("../models/db")
 const {Status} = require ("@prisma/client")
 
 exports.workout = async (req, res, next) => {
-
-    try {
-    const { workoutType , WorkoutDate,img , advice } = req.body;
+  try {
+    const { workoutType, WorkoutDate, img, advice } = req.body;
     const userId = req.user.id;
+
+    // Validate and truncate advice if necessary
+    const maxAdviceLength = 255; // Adjust this value based on your column size
+    const truncatedAdvice = advice.length > maxAdviceLength ? advice.substring(0, maxAdviceLength) : advice;
+
     const workout = await db.workout.create({
-        data:{
-            workoutType,
-            WorkoutDate: new Date(WorkoutDate),
-            img,
-            advice,
-            userId
-        }
-    })
-    res.json({message:'successful', workout})
-    } catch (err) {
-      next(err);
-    }
-  };
+      data: {
+        workoutType,
+        WorkoutDate: new Date(WorkoutDate),
+        img,
+        advice: truncatedAdvice,
+        userId,
+      },
+    });
+    res.json({ message: 'successful', workout });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
   exports.getworkout = async (req, res, next) => {
     try {

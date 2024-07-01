@@ -4,12 +4,13 @@ const authController = require("../controllers/auth-controller");
 const authenticate = require('../middlewares/authenticate');
 const workController = require('../controllers/work-controller');
 const adminuser = require('../controllers/admin-controller');
+const upload = require('../middlewares/upload');
 
-router.post('/register', authController.register);
+router.post('/register', upload.array("image", 1), authController.register);
 router.post('/login', authController.login);
 router.get('/me', authenticate, authController.getme);
 router.post('/workout/',authenticate,workController.workout);
-router.get('/getworkout',authenticate,workController.getworkout);
+router.get('/getworkout', upload.array("image", 1), authenticate,workController.getworkout);
 router.get('/all-status', authenticate, workController.getAllStatus)
 router.delete('/del/:id',authenticate,workController.deleteworkout);
 router.get('/getuser' , authenticate,adminuser.getadminuser)

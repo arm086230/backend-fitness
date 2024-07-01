@@ -12,11 +12,9 @@ module.exports = async (req, res, next) => {
     }
     const token = authorization.split(' ')[1]
     const payload = jwt.verify(token,process.env.JWT_SECRET)
-    // console.log(payload)
     
     const user = await db.user.findFirstOrThrow({where : {id: payload.id}})
     delete user.password
-    // console.log(user)
     req.user = user  
     next()
     

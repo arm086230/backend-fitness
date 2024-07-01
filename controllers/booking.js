@@ -2,7 +2,6 @@ const db = require("../models/db");
 
 exports.deletebooking = async (req, res, next) => {
   const { delebooks } = req.params;
-  // console.log('TEST');
   console.log(delebooks);
   try {
     const delebook = await db.booking.delete({
@@ -15,34 +14,49 @@ exports.deletebooking = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.createbooking = async (req, res, next) => {
   try {
-    const { TrainerId, bookingDateTime, status } = req.body;
+    const input = req.body;
 
-    // console.log(req.body);
+    // Validate input fields
+    if (!input.userId || !input.name || !input.bookingDateTime || !input.bookingDate || !input.expiryDate) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
 
-    console.log(TrainerId)
+    // Check and parse dates
+    const bookingDateTime = new Date(input.bookingDateTime);
+    const bookingDate = new Date(input.bookingDate);
+    const expiryDate = new Date(input.expiryDate);
+
+    // Validate date objects
+    if (isNaN(bookingDateTime.getTime()) || isNaN(bookingDate.getTime()) || isNaN(expiryDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date format provided" });
+    }
+
+    // Create the booking
     const booking = await db.booking.create({
       data: {
-        user: {
-          connect: {
-            id: req.user.id,
-          },
-        },
-        Trainer: {
-          connect: {
-            id: TrainerId,
-          },
-        },
-        bookingDateTime: new Date(bookingDateTime),
-        status,
-      },
+        userId: input.userId,
+        name: input.name,
+        sex: input.sex,
+        age: input.age,
+        phone: input.phone,
+        bookingDateTime,
+        bookingDate,
+        expiryDate,
+        status: "Pending",
+      }
     });
-    res.json({ message: "create OK", booking });
+
+    // Respond with success message and booking details
+    res.json({ message: "Booking created successfully", booking });
   } catch (err) {
+    // Handle errors
     next(err);
   }
 };
+
 
 exports.getbooking = async (req, res, next) => {
   try {
@@ -54,6 +68,7 @@ exports.getbooking = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.updatebooking = async (req, res, next) => {
   const { id } = req.params;
   const { status } = req.body;
