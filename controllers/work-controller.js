@@ -7,7 +7,7 @@ exports.workout = async (req, res, next) => {
     const userId = req.user.id;
 
     // Validate and truncate advice if necessary
-    const maxAdviceLength = 255; // Adjust this value based on your column size
+    const maxAdviceLength = 1000; // Adjust this value based on your column size
     const truncatedAdvice = advice.length > maxAdviceLength ? advice.substring(0, maxAdviceLength) : advice;
 
     const workout = await db.workout.create({
@@ -42,7 +42,7 @@ exports.workout = async (req, res, next) => {
     const {id} = req.params
     try{
         const rs = await db.workout.delete({
-            where:{ id : +id }
+            where:{ id :+id }
         })
         res.json({message: 'delete',result:rs})
     }catch(err){

@@ -4,11 +4,7 @@ exports.getadminbooking = async (req, res, next) => {
   try {
     const getadminbooking = await db.booking.findMany({
       include: {
-        user: {
-          select: {
-            name: true,
-          },
-        },
+        user: true,
       },
     });
     res.json(getadminbooking);
@@ -27,6 +23,21 @@ exports.getadminuser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getuserById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const user = await db.user.findFirst({
+      where: { id: +id },
+      include:{
+        Resume: true
+      }
+    });
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+}
 
 exports.workout = async (req, res, next) => {
   try {
@@ -74,3 +85,32 @@ exports.updateuser = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.updatestatustrainer = async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  console.log(status)
+  try {
+    // Update the trainerstatus in the database
+    const updatedResume = await db.resume.update({
+      where: { id: +id }, // ใช้ id เป็น primary key ที่ต้องการใช้ในการค้นหา
+      data: { status }
+    });
+    res.json({ message: 'Updated status', result: updatedResume });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getresume = async (req , res , next) => {
+  try {
+    const resume = await db.resume.findMany({
+      // where: { userId: req.user.id },
+    });
+    res.json(resume);
+  }catch (err) {
+    next(err);
+  }
+}
+
+

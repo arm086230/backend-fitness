@@ -18,12 +18,17 @@ exports.register = async (req, res, next) => {
       role,
     } = req.body;
 
-    // Assuming req.files is an array of files
-    const imagePromise = req.files.map((file) => {
-      return cloudupload(file.path);
-    });
+    // Access the files using the field names
+    const imageFiles = req.files['image'] || [];
+    const resumeFiles = req.files['resumefile'] || [];
 
+    // Upload image files to cloud
+    const imagePromise = imageFiles.map((file) => cloudupload(file.path));
     const imageUrlArray = await Promise.all(imagePromise);
+
+    // Upload resume files to cloud
+    const resumePromise = resumeFiles.map((file) => cloudupload(file.path));
+    const resumeUrlArray = await Promise.all(resumePromise);
 
     // Validation
     if (!(name && username && password && confirmPassword)) {
@@ -41,7 +46,7 @@ exports.register = async (req, res, next) => {
       phone,
       age,
       sex,
-      image: imageUrlArray[0],
+      image: imageUrlArray[0], // Assuming single image
     };
 
     if (role) {
@@ -54,12 +59,24 @@ exports.register = async (req, res, next) => {
 
     const rs = await db.user.create({ data });
 
+    if (role === "TRAINER" && resumeUrlArray.length > 0) {
+      await db.resume.create({
+        data: {
+          resumefile: resumeUrlArray[0], // Assuming single resume file
+          userId: rs.id,
+        },
+      });
+    }
+
     res.json({ msg: "Register successful" });
   } catch (err) {
     next(err);
     console.error(err);
   }
 };
+
+
+
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
@@ -83,7 +100,7 @@ exports.login = async (req, res, next) => {
     res.json({ token: token });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Error registering" });
+    res.status(500).json({ message: "Error login" });
   }
 };
 

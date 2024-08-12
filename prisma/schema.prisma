@@ -30,6 +30,21 @@ model User {
   bookings Booking[]
   Workout  Workout[]
   Cart     Cart[]
+  Resume   Resume[]
+}
+
+model Resume {
+  id         Int           @id @default(autoincrement())
+  userId     Int
+  resumefile String
+  status     Trainerstatus @default(Waiting_for_approval)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+enum Trainerstatus {
+  Approve
+  Waiting_for_approval
+  Not_approved
 }
 
 model Workout {
@@ -52,9 +67,9 @@ model Product {
 }
 
 model Cart {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cartStatus CartStatus  @default(Pending)
   CartItems  CartItems[]
 }
@@ -75,6 +90,8 @@ enum CartStatus {
 enum Status {
   Pending
   Confirmed
+  Cancel
+  FullyBooked
 }
 
 model Booking {
